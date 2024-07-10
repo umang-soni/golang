@@ -1,3 +1,3 @@
-module github.com/umang-soni/golang.git
+module example.com
 
 go 1.22.5
