@@ -28,48 +28,48 @@ export default function NewComponent() {
     try {
       const response = await fetch('http://localhost:8080/upload', {
         method: 'POST',
-        mode:"no-cors",
         body: formData,
       });    
 
-      // console.log(response)
-      // if (!response.ok) {
-      //   throw new Error('Failed to upload file');
-      // }
+      console.log(response)
+      if (!response.ok) {
+        throw new Error('Failed to upload file');
+      }
 
       const json = await response.json();
 
       console.log('Parsed JSON:', json);
-      setCsvData(json.data);  // Assuming the JSON response has a 'data' field
+      setCsvData(json)
+      // Assuming the JSON response has a 'data' field
 
     } catch (error) {
-      // console.error('Error:', error);
+      console.error('Error:', error);
     }
 
 
-    // const reader = new FileReader();
+    const reader = new FileReader();
 
-    // reader.onload = (event) => {
-    //   const csv = event.target.result;
-    //   Papa.parse(csv, {
-    //     complete: (result) => {
-    //       console.log('Parsed CSV:', result.data);
-    //       setCsvData(result.data);
-    //     },
-    //     header: true
-    //   });
-    // };
+    reader.onload = (event) => {
+      const csv = event.target.result;
+      Papa.parse(csv, {
+        complete: (result) => {
+          console.log('Parsed CSV:', result.data);
+          // setCsvData(result.data);
+        },
+        header: true
+      });
+    };
 
-    // reader.onprogress = (event) => {
-    //   if (event.lengthComputable) {
-    //     const percentLoaded = Math.round((event.loaded / event.total) * 100);
-    //     console.log(`${percentLoaded}% loaded`);
-    //     setpercent(percentLoaded)
-    //     // Update progress bar or display percentage here
-    //   }
-    // };
+    reader.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percentLoaded = Math.round((event.loaded / event.total) * 100);
+        console.log(`${percentLoaded}% loaded`);
+        setpercent(percentLoaded)
+        // Update progress bar or display percentage here
+      }
+    };
 
-    // reader.readAsText(file);
+    reader.readAsText(file);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -109,7 +109,12 @@ export default function NewComponent() {
             </thead>
             <tbody>
               {currentItems.map((item, index) => (
+                
+                
                 <tr key={index} className='bg-slate-100 hover:bg-slate-300'>
+
+
+          
                   <td className='m-3 p-3'>{item.Email}</td>
                   <td className='m-3 p-3'>{item.Name}</td>
                   <td className='m-3 p-3'>{item.CreditScore}</td>
@@ -117,6 +122,10 @@ export default function NewComponent() {
                   <td className='m-3 p-3'>{item.MaskedPhoneNumber}</td>
                   <td className='m-3 p-3'>{BasePrice + (PricePerCreditLine * item.CreditLines) + (PricePerCreditScorePoint * item.CreditScore)}</td>
                 </tr>
+
+
+
+
               ))}
             </tbody>
           </table>
